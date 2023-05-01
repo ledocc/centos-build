@@ -1,0 +1,17 @@
+[settings]
+arch=x86_64
+arch_build=x86_64
+build_type=Release
+compiler=gcc
+compiler.cppstd=17
+compiler.libcxx=libstdc++11
+compiler.version=10
+os=Linux
+os_build=Linux
+[options]
+[build_requires]
+[env]
+[conf]
+tools.system.package_manager:mode=install
+tools.system.package_manager:sudo=True
+tools.system.package_manager:tool=yum
