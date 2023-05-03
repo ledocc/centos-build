@@ -37,6 +37,9 @@ WORKDIR /home/builder
 
 COPY script /tmp/script
 RUN /tmp/script/run.sh
+RUN sudo rm -rf /tmp/script
 
-ENV PATH=/home/builder/.local/bin:${PATH}
+RUN echo export PATH=/home/builder/.local/bin:\${PATH} >> /home/builder/.bashrc&& \
+    echo . /opt/rh/devtoolset-10/enable >> /home/builder/.bashrc && \
+    echo export PATH=/usr/lib64/ccache:\${PATH} >> /home/builder/.bashrc
 
