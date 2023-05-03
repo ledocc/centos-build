@@ -1,0 +1,7 @@
+
+CURRENT_SHELL=$(ps -p $$ o command | tail -n1)
+[[ ${CURRENT_SHELL} =~ .*zsh ]] && THIS_SCRIPT_PATH="$0"
+[[ ${CURRENT_SHELL} =~ .*bash ]] && THIS_SCRIPT_PATH="${BASH_SOURCE[0]}"
+
+THIS_SCRIPT_DIR=$(dirname $(realpath "${THIS_SCRIPT_PATH}"))
+export PATH=${THIS_SCRIPT_DIR}/bin:${PATH}
