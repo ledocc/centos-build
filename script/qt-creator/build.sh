@@ -88,30 +88,20 @@ function _enable_env_var
 
 function build_clang
 {
-    LLVM_VERSION=${1:-16.0.2}
+    LLVM_VERSION=${1:-16.0.3}
 
     LLVM_ARCHIVE_DIR=${ARCHIVE_DIR}/llvm
     LLVM_SRC_DIR=${SRC_DIR}/llvm
-    LLVM_SRC_ROOT=${LLVM_SRC_DIR}/llvm-project-llvmorg-${LLVM_VERSION}
+    LLVM_GIT_DIR=${LLVM_SRC_DIR}/llvm-git
     LLVM_BUILD_DIR=${BUILD_DIR}/llvm
     LLVM_INSTALL_DIR=${INSTALL_DIR}/llvm
 
-    function download
-    {
-	_begin_process ${LLVM_ARCHIVE_DIR} || return 0
-
-	_create_and_cd ${LLVM_ARCHIVE_DIR}
-	curl -L -O https://github.com/llvm/llvm-project/archive/refs/tags/llvmorg-${LLVM_VERSION}.tar.gz
-
-	_end_process
-    }
-
-    function extract
+    function clone
     {
 	_begin_process ${LLVM_SRC_DIR} || return 0
 	
 	_create_and_cd ${LLVM_SRC_DIR}
-	tar xvf ${LLVM_ARCHIVE_DIR}/llvmorg-${LLVM_VERSION}.tar.gz
+	git clone -b llvmorg-${LLVM_VERSION} https://github.com/llvm/llvm-project.git llvm-git
 	
 	_end_process
     }
@@ -121,7 +111,7 @@ function build_clang
 	_begin_process ${LLVM_BUILD_DIR} || return 0
 
 	cmake \
-	    -S ${LLVM_SRC_ROOT}/llvm \
+	    -S ${LLVM_GIT_DIR}/llvm \
 	    -B ${LLVM_BUILD_DIR} \
 	    -G Ninja \
 	    -DCMAKE_BUILD_TYPE=Release \
@@ -148,8 +138,7 @@ function build_clang
 	_end_process
     }
 
-    download
-    extract
+    clone
     build
     install
 }
