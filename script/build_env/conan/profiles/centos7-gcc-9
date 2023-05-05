@@ -1,4 +1,4 @@
 include(centos7-gcc)
 
 [settings]
-compiler.version=10
+compiler.version=9

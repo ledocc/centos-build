@@ -56,4 +56,4 @@ pip3 install --user conan==1.59
 PATH=~/.local/bin:${PATH}
 
 conan config init
-cp ${THIS_SCRIPT_DIR}/conan/profiles/centos7-gcc-10 ${HOME}/.conan/profiles
+cp ${THIS_SCRIPT_DIR}/conan/profiles/* ${HOME}/.conan/profiles

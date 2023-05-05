@@ -2,8 +2,6 @@
 
 THIS_SCRIPT_DIR=$(realpath $(dirname $0))
 
-. /opt/rh/devtoolset-10/enable
-
 ROOT_DIR=$(pwd)
 ARCHIVE_DIR=${ROOT_DIR}/archive
 SRC_DIR=${ROOT_DIR}/source
