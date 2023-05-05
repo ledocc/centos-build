@@ -395,5 +395,6 @@ build_d_demangler
 build_clazy ${CLAZY_VERSION}
 build_qt_creator ${QTC_VERSION}
 
+mkdir -p /tmp/install
 cp ${QTC_FINAL_ARCHIVE_PATH} /tmp/install
 
