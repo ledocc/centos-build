@@ -101,7 +101,10 @@ function build_clang
 	_begin_process ${LLVM_SRC_DIR} || return 0
 	
 	_create_and_cd ${LLVM_SRC_DIR}
-	git clone -b llvmorg-${LLVM_VERSION} https://github.com/llvm/llvm-project.git llvm-git
+	git clone \
+	    --depth 1 \
+	    -b llvmorg-${LLVM_VERSION} \
+	    https://github.com/llvm/llvm-project.git llvm-git
 	
 	_end_process
     }
