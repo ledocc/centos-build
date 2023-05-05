@@ -369,7 +369,7 @@ function build_qt_creator
 	cmake --install ${QTC_BUILD_DIR} --component Dependencies
 	cp ${CLAZY_INSTALL_DIR}/bin/clazy-standalone ${QTC_INSTALL_DIR}/libexec/qtcreator/clang/bin
 	cp ${CLAZY_INSTALL_DIR}/lib64/ClazyPlugin.so ${QTC_INSTALL_DIR}/libexec/qtcreator/clang/lib
-	cp ${THIS_SCRIPT_DIR}/.profile_qt-creator.sh ${QTC_INSTALL_DIR}
+	cp ${THIS_SCRIPT_DIR}/.profile_qt-creator ${QTC_INSTALL_DIR}
 	
 	tar Jcvf ${QTC_FINAL_ARCHIVE_PATH} \
 	    -C $(dirname ${QTC_INSTALL_DIR}) \
