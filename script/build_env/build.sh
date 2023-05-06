@@ -46,8 +46,28 @@ pip3 install --user ninja
 ####################################################################################################
 # cmake installation
 ####################################################################################################
-pip3 install cmake
+#pip3 install cmake
+# prefere complete installation to have ccmake
 
+CMAKE_VERSION=3.26.3
+
+
+CMAKE_DIR_NAME=cmake-${CMAKE_VERSION}-linux-x86_64
+CMAKE_ARCHIVE=${CMAKE_DIR_NAME}.tar.gz
+curl -L -O https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/${CMAKE_ARCHIVE}
+tar xvf ${CMAKE_ARCHIVE}
+
+LOCAL_APP_DIR=${HOME}/.local/app
+rm -rf ${LOCAL_APP_DIR}/${CMAKE_DIR_NAME}
+mkdir -p ${LOCAL_APP_DIR}
+mv ${CMAKE_DIR_NAME} ${LOCAL_APP_DIR}
+
+sudo rm -f ${CMAKE_ARCHIVE}
+
+for exe in $(ls -dC1 ${LOCAL_APP_DIR}/${CMAKE_DIR_NAME}/bin/*)
+do
+    ln -s ${exe} -t ${HOME}/.local/bin
+done
 
 ####################################################################################################
 # conan installation
