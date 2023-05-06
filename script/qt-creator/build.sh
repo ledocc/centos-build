@@ -120,6 +120,7 @@ function build_clang
 	    -DCMAKE_BUILD_TYPE=Release \
 	    -DLLVM_CCACHE_BUILD=ON \
 	    -DLLVM_ENABLE_PROJECTS='clang;clang-tools-extra' \
+	    -DLLVM_ENABLE_RTTI=ON \
 	    -DCMAKE_INSTALL_PREFIX=${LLVM_INSTALL_DIR}
 
 	cmake \
