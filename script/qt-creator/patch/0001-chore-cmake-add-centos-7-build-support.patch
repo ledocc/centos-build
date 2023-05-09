@@ -67,15 +67,14 @@ diff --git a/scripts/deployqt.py b/scripts/deployqt.py
 index 05113e4..5e96617 100755
 --- a/scripts/deployqt.py
 +++ b/scripts/deployqt.py
-@@ -279,7 +279,7 @@ def deploy_elfutils(qtc_install_dir, chrpath_bin, args):
+@@ -286,7 +286,7 @@ def deploy_elfutils(qtc_install_dir, chrpath_bin, args):
+                 return root
+         return path
  
-     version = '1'
-     libs = ['elf', 'dw']
--    elfutils_lib_path = os.path.join(args.elfutils_path, 'lib')
-+    elfutils_lib_path = os.path.join(args.elfutils_path, 'lib64')
+-    elfutils_lib_path = find_elfutils_lib_path(os.path.join(args.elfutils_path, 'lib'))
++    elfutils_lib_path = find_elfutils_lib_path(os.path.join(args.elfutils_path, 'lib64'))
      if common.is_linux_platform():
          install_path = os.path.join(qtc_install_dir, 'lib', 'elfutils')
          backends_install_path = install_path
 -- 
 1.8.3.1
-
