@@ -24,7 +24,7 @@ GIT_ARCHIVE=${GIT_DIR_NAME}.tar.gz
 curl -L -O https://www.kernel.org/pub/software/scm/git/${GIT_ARCHIVE}
 tar xvf ${GIT_ARCHIVE}
 
-GIT_INSTALL_DIR=${GIT_BUILD_DIR}/install/git-${GIT_VERSION}
+GIT_INSTALL_DIR=${GIT_BUILD_DIR}/install/git-${GIT_VERSION}-$(uname)-$(uname -p)
 cd ${GIT_DIR_NAME}
 ./configure --prefix=${GIT_INSTALL_DIR}
 make -j $(nproc) all man
