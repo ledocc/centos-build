@@ -16,8 +16,9 @@ sudo yum -y install \
 GRAPHVIZ_VERSION=8.0.5
 GRAPHVIZ_SRC_DIR=graphviz-${GRAPHVIZ_VERSION}
 GRAPHVIZ_ARCHIVE=${GRAPHVIZ_SRC_DIR}.tar.xz
-GRAPHVIZ_INSTALL_DIR=/tmp/install/${GRAPHVIZ_SRC_DIR}-$(uname)-$(uname -p)
-GRAPHVIZ_FINAL_ARCHIVE_PATH=/tmp/install/${GRAPHVIZ_SRC_DIR}.tar.xz
+GRAPHVIZ_INSTALL_DIRNAME=${GRAPHVIZ_SRC_DIR}-$(uname)-$(uname -p)
+GRAPHVIZ_INSTALL_DIR=/tmp/install/${GRAPHVIZ_INSTALL_DIRNAME}
+GRAPHVIZ_FINAL_ARCHIVE_PATH=${GRAPHVIZ_INSTALL_DIR}.tar.xz
 
 
 curl -L -O https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/${GRAPHVIZ_VERSION}/${GRAPHVIZ_ARCHIVE}
