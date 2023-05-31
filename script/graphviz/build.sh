@@ -24,7 +24,7 @@ GRAPHVIZ_FINAL_ARCHIVE_PATH=${GRAPHVIZ_INSTALL_DIR}.tar.xz
 curl -L -O https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/${GRAPHVIZ_VERSION}/${GRAPHVIZ_ARCHIVE}
 tar xvf ${GRAPHVIZ_ARCHIVE}
 cd ${GRAPHVIZ_SRC_DIR}
-./configure --prefix ${GRAPHVIZ_INSTALL_DIR}
+./configure --enable-static --prefix ${GRAPHVIZ_INSTALL_DIR}
 make ${nproc}
 make install
 
