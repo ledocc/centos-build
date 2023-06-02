@@ -4,6 +4,10 @@ set -x
 set -e
 
 
+THIS_SCRIPT_DIR=$(dirname $(realpath $0))
+source ${THIS_SCRIPT_DIR}/../common.sh
+
+
 sudo yum -y install \
     librsvg2-devel \
     cairo-devel \
@@ -12,22 +16,11 @@ sudo yum -y install \
     libwebp-devel
     
 
+init_work_dir graphviz 8.0.5
 
-GRAPHVIZ_VERSION=8.0.5
-GRAPHVIZ_SRC_DIR=graphviz-${GRAPHVIZ_VERSION}
-GRAPHVIZ_ARCHIVE=${GRAPHVIZ_SRC_DIR}.tar.xz
-GRAPHVIZ_INSTALL_DIRNAME=${GRAPHVIZ_SRC_DIR}-$(uname)-$(uname -p)
-GRAPHVIZ_INSTALL_DIR=/tmp/install/${GRAPHVIZ_INSTALL_DIRNAME}
-GRAPHVIZ_FINAL_ARCHIVE_PATH=${GRAPHVIZ_INSTALL_DIR}.tar.xz
+download_and_extract https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/${VERSION}/${SRC_DIR_NAME}.tar.xz
 
+CONFIGURE_OPTS="--disable-shared --enable-static"
+autotool_build
 
-curl -L -O https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/${GRAPHVIZ_VERSION}/${GRAPHVIZ_ARCHIVE}
-tar xvf ${GRAPHVIZ_ARCHIVE}
-cd ${GRAPHVIZ_SRC_DIR}
-./configure --enable-static --prefix ${GRAPHVIZ_INSTALL_DIR}
-make ${nproc}
-make install
-
-tar Jcvf ${GRAPHVIZ_FINAL_ARCHIVE_PATH} \
-    -C $(dirname ${GRAPHVIZ_INSTALL_DIR}) \
-    $(basename ${GRAPHVIZ_INSTALL_DIR})
+make_archive

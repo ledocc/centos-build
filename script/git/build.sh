@@ -17,12 +17,9 @@ sudo yum -y install \
 
 init_work_dir git 2.41.0
 
-
-SRC_DIR_NAME=git-${VERSION}
-GIT_ARCHIVE=${GIT_DIR_NAME}.tar.gz
-
 download_and_extract https://www.kernel.org/pub/software/scm/git/${SRC_DIR_NAME}.tar.gz
-autotool_build ${WORK_DIR}/${SRC_DIR_NAME}
+
+autotool_build
 make -j $(nproc) all man
 make install install-man
 
