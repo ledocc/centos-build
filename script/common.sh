@@ -13,6 +13,7 @@ function init_work_dir()
 
 
     VERSION=$2
+    SRC_DIR_NAME=${PROJECT_NAME}-${VERSION}
     INSTALL_DIR_NAME=${PROJECT_NAME}-${VERSION}-$(uname)-$(uname -p)
     INSTALL_DIR=${WORK_DIR}/${INSTALL_DIR_NAME}
     FINAL_ARCHIVE=/tmp/install/${INSTALL_DIR_NAME}.tar.xz
@@ -43,12 +44,12 @@ function download_and_extract()
 
 function autotool_build()
 {
-    SRC_DIR=$1
+    SRC_DIR=${1:-${WORK_DIR}/${SRC_DIR_NAME}}
     
     cd ${SRC_DIR}
     if [[ ! -f configure  ]]
     then
-	autogen
+	./autogen.sh
     fi
 
     ./configure --prefix=${INSTALL_DIR} ${CONFIGURE_OPTS}
