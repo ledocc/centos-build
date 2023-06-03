@@ -12,15 +12,15 @@ sudo yum -y install yum-utils
 sudo yum-builddep -y python3
 
 
-init_work_dir python 3.9.16
+init_work_dir Python 3.9.16
 
-SRC_DIR_NAME=Python-${VERSION}
 download_and_extract https://www.python.org/ftp/python/${VERSION}/${SRC_DIR_NAME}.tar.xz
 
-
 CONFIGURE_OPTS="--enable-optimizations --disable-test-modules"
-autotool_build ${SRC_DIR_NAME}
+autotool_build
 
-${INSTALL_DIR}/bin/python3 -m pip install --upgrade pip
+cd ${WORK_DIR}
+curl -L -O https://bootstrap.pypa.io/get-pip.py
+${INSTALL_DIR}/bin/python3 get-pip.py
 
 make_archive

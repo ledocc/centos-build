@@ -12,21 +12,19 @@ source ${THIS_SCRIPT_DIR}/../common.sh
 
 init_work_dir clang-tools 16.0.4
 
-SRC_DIR=llvm-project-${VERSION}.src
-download_and_extract https://github.com/llvm/llvm-project/releases/download/llvmorg-${VERSION}/${SRC_DIR}.tar.xz
 
-cmake_build \
-    ${SRC_DIR}/llvm \
-    -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}_all \
-    -DBUILD_SHARED_LIBS=OFF \
-    -DLLVM_CCACHE_BUILD=ON \
-    -DLLVM_ENABLE_PROJECTS='clang;clang-tools-extra' \
-    -DLLVM_ENABLE_RTTI=ON
+cd ${WORK_DIR}
+
+LLVM_ARCHIVE=$(get_final_archive llvm $VERSION)
+[[ -f ${LLVM_ARCHIVE} ]] || ${THIS_SCRIPT_DIR}/../llvm/build.sh
+
+tar xvf ${LLVM_ARCHIVE}
 
 
+LLVM_INSTALL_DIR_NAME=$(get_install_dir_name llvm ${VERSION})
 function install_clang_tool()
 {
-    cp -a ${INSTALL_DIR}_all/$1 ${INSTALL_DIR}/$(dirname $1)
+    cp -a ${LLVM_INSTALL_DIR_NAME}/$1 ${INSTALL_DIR}/$(dirname $1)
 }
 
 mkdir -p ${INSTALL_DIR}/{bin,share/clang}

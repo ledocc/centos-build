@@ -4,6 +4,24 @@
 THIS_SCRIPT_DIR=$(realpath $(dirname $0))
 
 
+function get_install_dir_name()
+{
+    local PROJECT_NAME=$1
+    local VERSION=$2
+
+    echo ${PROJECT_NAME}-${VERSION}-$(uname)-$(uname -p)
+}
+
+function get_final_archive_name()
+{
+    echo $(get_install_dir_name $@).tar.xz
+}
+
+function get_final_archive()
+{
+    echo /tmp/install/$(get_final_archive_name $@)
+}
+
 function init_work_dir()
 {
     PROJECT_NAME=$1
@@ -14,9 +32,8 @@ function init_work_dir()
 
     VERSION=$2
     SRC_DIR_NAME=${PROJECT_NAME}-${VERSION}
-    INSTALL_DIR_NAME=${PROJECT_NAME}-${VERSION}-$(uname)-$(uname -p)
+    INSTALL_DIR_NAME=$(get_install_dir_name ${PROJECT_NAME} ${VERSION})
     INSTALL_DIR=${WORK_DIR}/${INSTALL_DIR_NAME}
-    FINAL_ARCHIVE=/tmp/install/${INSTALL_DIR_NAME}.tar.xz
 
     
     echo "Do work in \"${WORK_DIR}\"."
@@ -40,7 +57,6 @@ function download_and_extract()
     download ${URL}
     tar xvf $(basename ${URL})
 }
-
 
 function autotool_build()
 {
@@ -77,5 +93,23 @@ function cmake_build()
 
 function make_archive()
 {
+    FINAL_ARCHIVE=$(get_final_archive $PROJECT_NAME $VERSION)
     tar Jc -C ${WORK_DIR} -f ${FINAL_ARCHIVE} ${INSTALL_DIR_NAME}
+}
+
+
+function pip_download_and_make_archive()
+{
+    PROJECT_NAME=$1
+    VERSION=${2:-latest}
+
+    WORK_DIR=/tmp/${PROJECT_NAME}
+    INSTALL_DIR_NAME=${PROJECT_NAME}-${VERSION}
+
+    rm -rf ${WORK_DIR}
+    mkdir -p ${WORK_DIR}/${INSTALL_DIR_NAME}
+    cd ${WORK_DIR}/${INSTALL_DIR_NAME}
+    
+    pip download ${PROJECT_NAME}${2:+==${2}}
+    make_archive
 }
