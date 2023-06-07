@@ -10,7 +10,9 @@ CMakeDeps
 *:shared=True
 harfbuzz:with_glib=False
 harfbuzz:with_icu=True
+icu:data_packaging=library
 qt:with_harfbuzz=True
+qt:with_odbc=False
 qt:qtimageformats=True
 qt:qtnetworkauth=True
 qt:qtquickcontrols2=True
