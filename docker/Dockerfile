@@ -1,4 +1,5 @@
-FROM centos:7.9.2009
+ARG CENTOS_VERSION=7.9.2009
+FROM centos:${CENTOS_VERSION}
 
 
 
@@ -20,6 +21,8 @@ RUN yum -y install \
         m4 \
         patch \
         perl-Data-Dumper \
+        perl-Digest-SHA \
+        perl-IPC_Cmd \
         perl-Thread-Queue \
         sudo
 
