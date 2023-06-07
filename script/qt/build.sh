@@ -22,9 +22,10 @@ rm -rf ${WORK_DIR}
 mkdir -p ${WORK_DIR}
 cd ${WORK_DIR}
 
+
 conan remove -t '*'
 conan install ${THIS_SCRIPT_DIR} -pr:h centos7-gcc-9 -pr:b default -b outdated
-#conan info ${THIS_SCRIPT_DIR} -pr:h centos7-gcc-9 -pr:b default -b outdated -g deps.dot
+#conan info ${THIS_SCRIPT_DIR} -pr:h centos7-gcc-9 -pr:b default -g qt.dot
 
 WORK_GENERATOR_DIR=${WORK_DIR}/generators
 mkdir -p ${WORK_GENERATOR_DIR}
