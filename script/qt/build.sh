@@ -32,6 +32,14 @@ mkdir -p ${WORK_GENERATOR_DIR}
 mv ${WORK_DIR}/*.cmake ${WORK_GENERATOR_DIR}
 
 CONAN_HOME=$(conan config home)
-sed -i "s}\"${CONAN_HOME}.*\"}\"/sitr/qt5.15.9\"}" ${WORK_GENERATOR_DIR}/*
+sed -i "s}\"${CONAN_HOME}.*\"}\"/install/qt5.15.9\"}" ${WORK_GENERATOR_DIR}/*
 
+
+. ${THIS_SCRIPT_DIR}/fix_runpath.sh
+set +e
+set +x
+set_runpath_on_dir ${WORK_DIR}/bin '$ORIGIN/../lib'
+set_runpath_on_dir ${WORK_DIR}/lib '$ORIGIN'
+
+set -x
 tar Jc -C $(dirname ${WORK_DIR}) -f ${FINAL_ARCHIVE} $(basename ${WORK_DIR})
