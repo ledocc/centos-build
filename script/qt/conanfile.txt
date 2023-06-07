@@ -1,0 +1,29 @@
+
+[requires]
+qt/5.15.9@
+qwt/6.2.0@
+
+[generators]
+CMakeDeps
+
+[options]
+*:shared=True
+harfbuzz:with_glib=False
+harfbuzz:with_icu=True
+qt:with_harfbuzz=True
+qt:qtimageformats=True
+qt:qtnetworkauth=True
+qt:qtquickcontrols2=True
+qt:qtsvg=True
+qt:qttools=True
+qt:qttranslations=True
+qt:qtwayland=False
+qwt:svg=True
+xkbcommon:with_wayland=False
+
+[imports]
+bin, * -> bin
+include, * -> include
+lib, * -> lib
+licenses, * -> licenses @ folder=True
+
