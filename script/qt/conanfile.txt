@@ -1,7 +1,7 @@
 
 [requires]
 qt/5.15.9@
-qwt/6.2.0@
+qwt/6.1.6@
 
 [generators]
 CMakeDeps

@@ -3,43 +3,40 @@
 set -x
 set -e
 
-sudo yum -y install devtoolset-9
-source /opt/rh/devtoolset-9/enable
 
-sudo yum -y install perl-IPC-Cmd perl-Digest-SHA
+sudo yum -y install \
+     perl-IPC-Cmd \
+     perl-Digest-SHA
 
 
 THIS_SCRIPT_DIR=$(dirname $(realpath $0))
-
-PROJECT_NAME=qt
-VERSION=5.15.9
-
-WORK_DIR=/tmp/${PROJECT_NAME}-${VERSION}-$(uname)-$(uname -p)
-FINAL_ARCHIVE=/tmp/install/$(basename ${WORK_DIR}).tar.xz
+source ${THIS_SCRIPT_DIR}/../common.sh
 
 
-rm -rf ${WORK_DIR}
-mkdir -p ${WORK_DIR}
-cd ${WORK_DIR}
+qt_version=$(grep qt/ ${THIS_SCRIPT_DIR}/conanfile.txt | sed "s#qt/\([.0-9]*\)@#\1#")
 
+
+init_work_dir qt ${qt_version}
+mkdir -p ${INSTALL_DIR}
+cd ${INSTALL_DIR}
 
 conan remove -t '*'
 conan install ${THIS_SCRIPT_DIR} -pr:h centos7-gcc-9 -pr:b default -b outdated
-#conan info ${THIS_SCRIPT_DIR} -pr:h centos7-gcc-9 -pr:b default -g qt.dot
+conan info ${THIS_SCRIPT_DIR} -pr:h centos7-gcc-9 -pr:b default -g qt.dot
 
-WORK_GENERATOR_DIR=${WORK_DIR}/generators
-mkdir -p ${WORK_GENERATOR_DIR}
-mv ${WORK_DIR}/*.cmake ${WORK_GENERATOR_DIR}
+CMAKE_CONFIG_DIR=${INSTALL_DIR}/cmake
+mkdir -p ${CMAKE_CONFIG_DIR}
+mv ${INSTALL_DIR}/*.cmake ${CMAKE_CONFIG_DIR}
 
 CONAN_HOME=$(conan config home)
-sed -i "s}\"${CONAN_HOME}.*\"}\"/install/qt5.15.9\"}" ${WORK_GENERATOR_DIR}/*
+sed -i "s}\"${CONAN_HOME}.*\"}\"\$\{CMAKE_CURRENT_LIST_DIR\}/..\"}" ${CMAKE_CONFIG_DIR}/*.cmake
 
 
 . ${THIS_SCRIPT_DIR}/fix_runpath.sh
 set +e
 set +x
-set_runpath_on_dir ${WORK_DIR}/bin '$ORIGIN/../lib'
-set_runpath_on_dir ${WORK_DIR}/lib '$ORIGIN'
+set_runpath_on_dir ${INSTALL_DIR}/bin '$ORIGIN/../lib'
+set_runpath_on_dir ${INSTALL_DIR}/lib '$ORIGIN'
 
 set -x
-tar Jc -C $(dirname ${WORK_DIR}) -f ${FINAL_ARCHIVE} $(basename ${WORK_DIR})
+make_archive
