@@ -16,7 +16,7 @@ CENTOS_VERSION_UNDERSCORE=$(shell echo ${CENTOS_VERSION}|tr . _)
 IMAGE_TAG=$(CENTOS_$(CENTOS_VERSION_UNDERSCORE)_TAG)
 
 SCRIPT_DOCKER_VOLUME_OPT=-v $(top_level_dir)/script:/tmp/script
-INSTALL_DOCKER_VOLUME_OPT=-v $(top_level_dir)/install:/tmp/install
+INSTALL_DOCKER_VOLUME_OPT=-v $(top_level_dir)/archive:/tmp/archive
 
 HOST_CCACHE_DIR=$(CACHE_DIR)/ccache
 HOST_CONAN_CACHE_DIR=$(CACHE_DIR)/conan_cache
@@ -25,14 +25,19 @@ HOST_CONAN_CACHE_DIR=$(CACHE_DIR)/conan_cache
 build: Dockerfile
 	docker build --build-arg CENTOS_VERSION=$(IMAGE_TAG) -t $(IMAGE_NAME):$(IMAGE_TAG) .
 
-run:
+create_volume_dir:
+	mkdir -p $(top_level_dir)/archive
+	mkdir -p $(HOST_CCACHE_DIR)
+	mkdir -p $(HOST_CONAN_CACHE_DIR)
+
+run: create_volume_dir
 	docker run -ti \
 	$(SCRIPT_DOCKER_VOLUME_OPT) \
 	$(INSTALL_DOCKER_VOLUME_OPT) \
 	$(IMAGE_NAME):$(IMAGE_TAG)
 
 
-run-dev:
+run-dev: create_volume_dir
 	mkdir -p $(HOST_CCACHE_DIR)
 	docker run -ti \
 	$(SCRIPT_DOCKER_VOLUME_OPT) \
