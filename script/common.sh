@@ -4,6 +4,53 @@
 THIS_SCRIPT_DIR=$(realpath $(dirname $0))
 
 
+FINAL_ARCHIVE_PREFIX=/tmp/archive
+FINAL_ARCHIVE_EXTENSION=tar.xz
+TAR_COMPRESS_OPT=J
+
+PACKAGE_INSTALL_PREFIX=/tmp/install
+
+function get_final_archive_path_for()
+{
+    ls -1 ${FINAL_ARCHIVE_PREFIX}/*$1*|tail -n1
+}
+function get_or_create_final_archive_path_for()
+{
+    local final_archive_path__=$(get_final_archive_path_for $2)
+    if [[ -f ${final_archive_path__} ]]
+    then
+	eval $1=${final_archive_path__}
+	return
+    fi
+    
+    /tmp/script/$2/build.sh
+    final_archive_path__=$(get_final_archive_path_for $2)
+}
+
+function package_dir_name_from_archive()
+{
+    echo $(tar -t $1 | head -n1 | cut -d/ -f1)
+}
+
+function install_final_archive()
+{
+    get_or_create_final_archive_path_for final_archive_path $1
+    
+    local final_archive_name=$(basename ${final_archive_path})
+    local package_dir_name=${final_archive_name%.${FINAL_ARCHIVE_EXTENSION}}
+
+    package_dir=${PACKAGE_INSTALL_PREFIX}/${package_dir_name}
+
+    if [[ ! -d ${package_dir} ]]
+    then
+	mkdir -p ${PACKAGE_INSTALL_PREFIX}
+	tar x -C ${PACKAGE_INSTALL_PREFIX} -f $(get_final_archive_path_for $1)
+    fi
+    
+    echo ${package_dir}
+}
+
+
 function get_install_dir_name()
 {
     local PROJECT_NAME=$1
@@ -14,24 +61,33 @@ function get_install_dir_name()
 
 function get_final_archive_name()
 {
-    echo $(get_install_dir_name $@).tar.xz
+    echo $(get_install_dir_name $@).${FINAL_ARCHIVE_EXTENSION}
 }
 
 function get_final_archive()
 {
-    echo /tmp/install/$(get_final_archive_name $@)
+    echo ${FINAL_ARCHIVE_PREFIX}/$(get_final_archive_name $@)
+}
+
+function overload_src_dir_name()
+{
+    SRC_DIR_NAME=$1
+    SRC_DIR=${WORK_DIR}/${SRC_DIR_NAME}
 }
 
 function init_work_dir()
 {
     PROJECT_NAME=$1
-    
+
+    VERSION=$2
+    VERSION_UNDERSCORED=$(echo ${VERSION} | tr . _)
+
     WORK_DIR=/tmp/${PROJECT_NAME}
     BUILD_DIR=${WORK_DIR}/build
 
-
-    VERSION=$2
     SRC_DIR_NAME=${PROJECT_NAME}-${VERSION}
+    SRC_DIR=${WORK_DIR}/${SRC_DIR_NAME}
+    
     INSTALL_DIR_NAME=$(get_install_dir_name ${PROJECT_NAME} ${VERSION})
     INSTALL_DIR=${WORK_DIR}/${INSTALL_DIR_NAME}
 
@@ -60,8 +116,6 @@ function download_and_extract()
 
 function autotool_build()
 {
-    SRC_DIR=${1:-${WORK_DIR}/${SRC_DIR_NAME}}
-    
     cd ${SRC_DIR}
     if [[ ! -f configure  ]]
     then
@@ -75,9 +129,6 @@ function autotool_build()
 
 function cmake_build()
 {
-    SRC_DIR=$1
-    shift
-    
     cmake \
 	-S ${SRC_DIR} \
 	-B ${BUILD_DIR} \
@@ -94,7 +145,7 @@ function cmake_build()
 function make_archive()
 {
     FINAL_ARCHIVE=$(get_final_archive $PROJECT_NAME $VERSION)
-    tar Jc -C ${WORK_DIR} -f ${FINAL_ARCHIVE} ${INSTALL_DIR_NAME}
+    tar c${TAR_COMPRESS_OPT} -C ${WORK_DIR} -f ${FINAL_ARCHIVE} ${INSTALL_DIR_NAME}
 }
 
 

@@ -15,9 +15,9 @@ init_work_dir llvm 16.0.4
 SRC_DIR=llvm-project-${VERSION}.src
 download_and_extract https://github.com/llvm/llvm-project/releases/download/llvmorg-${VERSION}/${SRC_DIR}.tar.xz
 
+
+SRC_DIR=${SRC_DIR}/llvm
 cmake_build \
-    ${SRC_DIR}/llvm \
-    -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} \
     -DBUILD_SHARED_LIBS=OFF \
     -DLLVM_CCACHE_BUILD=ON \
     -DLLVM_ENABLE_PROJECTS='clang;clang-tools-extra' \
