@@ -33,7 +33,7 @@ index 0000000..107203f
 +[requires]
 +#elfutils/0.186@
 +#litehtml/cci.20211028@ 
-+qt/6.4.2@
++qt/6.5.1@
 +#yaml-cpp/0.7.0@
 +zlib/1.2.13@
 +zstd/1.5.5@

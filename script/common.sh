@@ -10,13 +10,13 @@ TAR_COMPRESS_OPT=J
 
 PACKAGE_INSTALL_PREFIX=/tmp/install
 
-function get_final_archive_path_for()
+function p_get_final_archive_path_for()
 {
     ls -1 ${FINAL_ARCHIVE_PREFIX}/*$1*|tail -n1
 }
 function get_or_create_final_archive_path_for()
 {
-    local final_archive_path__=$(get_final_archive_path_for $2)
+    local final_archive_path__=$(p_get_final_archive_path_for $2)
     if [[ -f ${final_archive_path__} ]]
     then
 	eval $1=${final_archive_path__}
@@ -24,7 +24,7 @@ function get_or_create_final_archive_path_for()
     fi
     
     /tmp/script/$2/build.sh
-    final_archive_path__=$(get_final_archive_path_for $2)
+    final_archive_path__=$(p_get_final_archive_path_for $2)
 }
 
 function package_dir_name_from_archive()
@@ -34,6 +34,7 @@ function package_dir_name_from_archive()
 
 function install_final_archive()
 {
+    final_archive_path=""
     get_or_create_final_archive_path_for final_archive_path $1
     
     local final_archive_name=$(basename ${final_archive_path})
@@ -44,7 +45,7 @@ function install_final_archive()
     if [[ ! -d ${package_dir} ]]
     then
 	mkdir -p ${PACKAGE_INSTALL_PREFIX}
-	tar x -C ${PACKAGE_INSTALL_PREFIX} -f $(get_final_archive_path_for $1)
+	tar x -C ${PACKAGE_INSTALL_PREFIX} -f $(p_get_final_archive_path_for $1)
     fi
     
     echo ${package_dir}
@@ -75,6 +76,27 @@ function overload_src_dir_name()
     SRC_DIR=${WORK_DIR}/${SRC_DIR_NAME}
 }
 
+function overload_version()
+{
+    VERSION=$1
+    VERSION_UNDERSCORED=$(echo ${VERSION} | tr . _)
+
+    p_update_src_dir_name
+    p_update_install_dir_name
+}
+
+function p_update_src_dir_name()
+{
+    SRC_DIR_NAME=${PROJECT_NAME}-${VERSION}
+    SRC_DIR=${WORK_DIR}/${SRC_DIR_NAME}
+}
+
+function p_update_install_dir_name()
+{
+    INSTALL_DIR_NAME=$(get_install_dir_name ${PROJECT_NAME} ${VERSION})
+    INSTALL_DIR=${WORK_DIR}/${INSTALL_DIR_NAME}
+}
+
 function init_work_dir()
 {
     PROJECT_NAME=$1
@@ -85,16 +107,15 @@ function init_work_dir()
     WORK_DIR=/tmp/${PROJECT_NAME}
     BUILD_DIR=${WORK_DIR}/build
 
-    SRC_DIR_NAME=${PROJECT_NAME}-${VERSION}
-    SRC_DIR=${WORK_DIR}/${SRC_DIR_NAME}
-    
-    INSTALL_DIR_NAME=$(get_install_dir_name ${PROJECT_NAME} ${VERSION})
-    INSTALL_DIR=${WORK_DIR}/${INSTALL_DIR_NAME}
+    p_update_src_dir_name
+    p_update_install_dir_name
 
     
     echo "Do work in \"${WORK_DIR}\"."
     rm -rf ${WORK_DIR}
     mkdir -p ${WORK_DIR}
+    mkdir -p ${BUILD_DIR}
+    
     cd ${WORK_DIR}
 }
 
