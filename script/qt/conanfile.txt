@@ -11,9 +11,11 @@ CMakeDeps
 harfbuzz:with_glib=False
 harfbuzz:with_icu=True
 icu:data_packaging=library
-qt:with_harfbuzz=True
-qt:with_odbc=False
+qt:gui=True
+qt:qtcharts=True
+qt:qtdeclarative=True
 qt:qtimageformats=True
+qt:qtmultimedia=True
 qt:qtnetworkauth=True
 qt:qtquickcontrols2=True
 qt:qtsvg=True
@@ -21,6 +23,12 @@ qt:qttools=True
 qt:qttranslations=True
 qt:qtwayland=False
 qt:qtxmlpatterns=True
+qt:widgets=True
+qt:with_fontconfig=True
+qt:with_freetype=True
+qt:with_harfbuzz=True
+qt:with_odbc=False
+qt:with_journald=True
 qwt:svg=True
 xkbcommon:with_wayland=False
 

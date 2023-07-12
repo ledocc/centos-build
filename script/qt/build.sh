@@ -21,8 +21,13 @@ mkdir -p ${INSTALL_DIR}
 cd ${INSTALL_DIR}
 
 conan remove -t '*'
-conan install ${THIS_SCRIPT_DIR} -pr:h centos7-gcc-9 -pr:b default -b outdated
-conan info ${THIS_SCRIPT_DIR} -pr:h centos7-gcc-9 -pr:b default -g qt.dot
+conan \
+    install ${THIS_SCRIPT_DIR} \
+    -pr:h centos7-gcc-9 \
+    -pr:b default \
+    -b outdated \
+    -o "qt:config=-ccache"
+#conan info ${THIS_SCRIPT_DIR} -pr:h centos7-gcc-9 -pr:b default -g qt.dot
 
 CMAKE_CONFIG_DIR=${INSTALL_DIR}/cmake
 mkdir -p ${CMAKE_CONFIG_DIR}
